@@ -6,7 +6,7 @@ import { ArrowLeft, User, Calendar, Tag } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { prisma } from "../../../lib/prisma";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const post = await prisma.post.findUnique({ where: { slug } });
     if (!post) return { title: "Yazı Bulunamadı" };
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const post = await prisma.post.findUnique({ where: { slug } });
 
