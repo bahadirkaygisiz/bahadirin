@@ -99,7 +99,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             target="_blank"
                             className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-zinc-200 transition-colors"
                         >
-                            X'de Paylaş
+                            X&apos;de Paylaş
                         </a>
                         <a
                             href="mailto:bahadirkaygisiz1@gmail.com"
