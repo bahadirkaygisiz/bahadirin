@@ -1,4 +1,5 @@
 import React from "react";
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { Youtube, Instagram, Twitter, Mail, Link as LinkIcon, Book } from "lucide-react";
 import { prisma } from "../lib/prisma";

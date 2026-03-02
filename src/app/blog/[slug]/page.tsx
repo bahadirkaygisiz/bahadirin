@@ -1,4 +1,5 @@
 import Link from "next/link";
+export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
