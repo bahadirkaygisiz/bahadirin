@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bahadır Kaygısız - bahadirin.com</title>
+  <meta name="description"
+    content="Bahadır Kaygısız — düşünceler, gözlemler, videolar ve yazılar. Tüm bağlantılarım tek sayfada." />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="Bahadır Kaygısız" />
+  <meta property="og:description" content="Düşüncelerim, videolarım ve yazılarım. Tüm bağlantılar tek sayfada." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bahadirin.com" />
+  <meta property="og:image" content="https://bahadirin.com/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f5f5f5;
+      --muted: #bdbdbd;
+      --line: #1c1c1c;
+      --accent: #ffffff;
+      --radius: 16px;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 400 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 32px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .avatar {
+      height: 72px;
+      width: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .tagline {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .links {
+      margin: 22px 0 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--fg);
+      background: transparent;
+      transition: transform .25s ease;
+    }
+
+    .link::before,
+    .link::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+    }
+
+    .link::before {
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 14px;
+      background: linear-gradient(60deg, #ff007f, #7928ca, #00d2ff, #39ff14, #ff007f);
+      background-size: 300% 300%;
+      filter: blur(6px);
+      opacity: 0;
+      transition: opacity .3s ease;
+      animation: neonFlow 3s infinite linear;
+    }
+
+    .link::after {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: inherit;
+      background: #0e0e0e;
+      box-shadow: inset 0 0 0 1px var(--line);
+      transition: background .25s ease, box-shadow .25s ease;
+    }
+
+    @keyframes neonFlow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .link:hover {
+      transform: translateY(-2px);
+    }
+
+    .link:hover::before {
+      opacity: 1;
+    }
+
+    .link:hover::after {
+      background: #121212;
+      box-shadow: inset 0 0 0 1px transparent;
+    }
+
+    .link span {
+      position: relative;
+      z-index: 1;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+
+    .icon {
+      position: relative;
+      z-index: 1;
+      height: 20px;
+      width: 20px;
+      fill: #fff;
+      flex-shrink: 0;
+    }
+
+    .bio {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    footer {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dot {
+      opacity: .6;
+    }
+
+    @media (max-width: 420px) {
+      .card {
+        padding: 22px;
+      }
+
+      header {
+        grid-template-columns: 56px 1fr;
+      }
+
+      .avatar {
+        height: 56px;
+        width: 56px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap" role="main">
+    <section class="card" aria-label="Bahadır Kaygısız bağlantıları">
+      <header>
+        <img src="/avatar.jpg" alt="Bahadır Kaygısız" class="avatar" />
+        <div>
+          <h1>Bahadır Kaygısız</h1>
+          <p class="tagline">düşünceler, videolar, yazılar — <strong>bahadirin.com</strong></p>
+        </div>
+      </header>
+
+      <p class="bio">Psikoloji, felsefe, kişisel gelişim. Kendi yolumda ilerlerken gördüklerimi, düşüncelerimi ve
+        tespitlerimi yazıyorum ve çekiyorum.</p>
+
+      <nav class="links" aria-label="Sosyal bağlantılar">
+        <a class="link" href="https://ytbe.app/go/qgUwP7G4" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path
+              d="M23.5 6.2s-.2-1.7-.9-2.5c-.9-.9-1.9-.9-2.4-1C16.6 2.4 12 2.4 12 2.4h0s-4.6 0-8.2.3c-.5.1-1.5.1-2.4 1-.7.8-.9 2.5-.9 2.5S0 8.2 0 10.3v1.3c0 2.1.2 4.1.2 4.1s.2 1.7.9 2.5c.9.9 2.1.8 2.7.9 2 .2 8.2.3 8.2.3s4.6 0 8.2-.3c.5-.1 1.5-.1 2.4-1 .7-.8.9-2.5.9-2.5s.2-2 .2-4.1v-1.3c0-2.1-.2-4.1-.2-4.1zM9.6 13.7V7.9l6.4 2.9-6.4 2.9z" />
+          </svg>
+          <span>YouTube - Gelişen Beyin</span>
+        </a>
+        <a class="link" href="https://instagram.com/bahadir.in" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path
+              d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm11 1a1 1 0 100 2 1 1 0 000-2zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z" />
+          </svg>
+          <span>Instagram</span>
+        </a>
+        <a class="link" href="https://x.com/bahadirkaygisiz" target="_blank" rel="noopener" aria-label="X">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path
+              d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 001.88-2.37 8.59 8.59 0 01-2.72 1.04 4.29 4.29 0 00-7.31 3.91A12.16 12.16 0 013 4.79a4.28 4.28 0 001.33 5.72 4.24 4.24 0 01-1.94-.54v.05a4.29 4.29 0 003.44 4.21 4.3 4.3 0 01-1.93.07 4.29 4.29 0 004.01 2.98A8.6 8.6 0 012 19.54a12.15 12.15 0 006.56 1.92c7.88 0 12.2-6.53 12.2-12.2 0-.19 0-.39-.01-.58A8.72 8.72 0 0024 5.1a8.47 8.47 0 01-2.54.7z" />
+          </svg>
+          <span>X</span>
+        </a>
+        <a class="link" href="https://www.tiktok.com/@bahadir.in" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path
+              d="M16.7 2h2.1c.1 1 .6 1.9 1.3 2.7a6 6 0 0 0 1.9 1.3 8.5 8.5 0 0 0 2 .6v2.2a9.7 9.7 0 0 1-2.6-.6 8.7 8.7 0 0 1-2-.9v7.4a6.7 6.7 0 0 1-1.8 4.5 6.6 6.6 0 0 1-4.8 2 6.7 6.7 0 0 1-4.7-1.9A6.2 6.2 0 0 1 6 15.8a6.3 6.3 0 0 1 1.8-4.5 6.6 6.6 0 0 1 4.7-2 6.3 6.3 0 0 1 1.9.3v2.4a4.2 4.2 0 0 0-1.9-.4 4.4 4.4 0 0 0-3.2 1.2 4.2 4.2 0 0 0-1.3 3 4.2 4.2 0 0 0 1.3 3 4.5 4.5 0 0 0 3.2 1.2 4.6 4.6 0 0 0 3.2-1.2 4.3 4.3 0 0 0 1.4-3.1V2z" />
+          </svg>
+          <span>TikTok</span>
+        </a>
+        <a class="link" href="https://medium.com/@bahadirkaygisiz" target="_blank" rel="noopener" aria-label="Blog">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path
+              d="M2 4v16h20V4H2zm17.7 3.5l-1.2 1.5c-.1.2-.2.3-.2.5v4c0 .2.1.4.2.5l1.1 1.5v.3h-5.5v-.3l1.1-1.5c.1-.2.2-.3.2-.5V9.8l-3.1 7.7h-.4L9 9.8v5.2c0 .1 0 .3.1.4l.9 1.8v.3H5.5v-.3l.9-1.8c.1-.1.1-.3.1-.4V9c0-.1 0-.3-.1-.4L5.3 7.5V7.2h3.8l3 6.6 2.6-6.6h3.9v.3z" />
+          </svg>
+          <span>Medium - Blog Yazılarım</span>
+        </a>
+        <a class="link" href="mailto:bahadirkaygisiz1@gmail.com" aria-label="E‑posta">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path
+              d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+          </svg>
+          <span>E‑posta Gönder</span>
+        </a>
+      </nav>
+
+      <footer>
+        <div>© <span id="y"></span> bahadirin.com</div>
+        <div class="dot">minimal · sade</div>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

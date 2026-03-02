@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.neon-border {
+  border: 1px solid rgba(251, 191, 36, 0.1);
+  transition: all 0.3s ease;
+}
+
+.neon-border:hover {
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
