@@ -52,3 +52,138 @@ body {
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
+
+/* ── SimpleMDE / EasyMDE Dark Mode Styles ── */
+.editor-toolbar {
+  background: #000 !important;
+  border-color: #18181b !important;
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+  opacity: 1 !important;
+  padding: 10px 15px !important;
+}
+
+.CodeMirror {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #18181b !important;
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  padding: 10px !important;
+}
+
+.CodeMirror-cursor {
+  border-left: 2px solid #f59e0b !important;
+}
+
+.editor-preview-full {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.editor-toolbar button {
+  color: #a1a1aa !important;
+  transition: all 0.2s ease !important;
+  border-radius: 6px !important;
+  margin: 2px !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.editor-toolbar button:hover,
+.editor-toolbar button.active {
+  background: #27272a !important;
+  color: #f59e0b !important;
+  border: none !important;
+}
+
+.editor-toolbar i.separator {
+  border-left-color: #18181b !important;
+  margin: 0 8px !important;
+}
+
+.editor-statusbar {
+  color: #3f3f46 !important;
+  padding: 8px 15px !important;
+}
+
+/* ── TipTap WYSIWYG Styles ── */
+.tiptap {
+  outline: none !important;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #3f3f46;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.editor-content-wrapper .tiptap {
+  color: #e4e4e7;
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.editor-content-wrapper .tiptap h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.editor-content-wrapper .tiptap h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.editor-content-wrapper .tiptap blockquote {
+  border-left: 4px solid #f59e0b;
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: #a1a1aa;
+  margin: 2rem 0;
+}
+
+.editor-content-wrapper .tiptap ul,
+.editor-content-wrapper .tiptap ol {
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.editor-content-wrapper .tiptap li {
+  margin-bottom: 0.5rem;
+}
+
+.editor-content-wrapper .tiptap img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1.5rem;
+  margin: 2rem 0;
+}
+
+.editor-content-wrapper .tiptap a {
+  color: #f59e0b;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.editor-content-wrapper .tiptap p {
+  margin: 1.25rem 0;
+}
+
+/* ── Typography Enhancements ── */
+.prose-invert {
+  --tw-prose-body: #d4d4d8;
+  --tw-prose-headings: #fff;
+  --tw-prose-links: #f59e0b;
+}

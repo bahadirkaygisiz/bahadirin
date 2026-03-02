@@ -19,32 +19,28 @@ const IconMapper = ({ name, className }: { name: string; className?: string }) =
 };
 
 export default async function Home() {
-  const links = await prisma.link.findMany({ orderBy: { order: "asc" } });
-  const posts = await prisma.post.findMany({
-    orderBy: { order: "asc" },
-    where: { published: true }
-  });
+  const [links, posts, settings] = await Promise.all([
+    prisma.link.findMany({ orderBy: { order: "asc" } }),
+    prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
+      where: { published: true }
+    }),
+    prisma.setting.findMany()
+  ]);
 
-  const aboutContent = await prisma.setting.findUnique({ where: { key: "ABOUT_ME" } });
-  const aboutImageUrl = await prisma.setting.findUnique({ where: { key: "ABOUT_IMAGE_URL" } });
+  const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
+
+  const aboutContent = getSetting("ABOUT_ME");
+  const aboutImageUrl = getSetting("ABOUT_IMAGE_URL");
 
   // Hero section — admin-editable settings
-  const heroTitleSetting = await prisma.setting.findUnique({ where: { key: "HERO_TITLE" } });
-  const heroQuoteSetting = await prisma.setting.findUnique({ where: { key: "HERO_QUOTE" } });
-  const heroDescriptionSetting = await prisma.setting.findUnique({ where: { key: "HERO_DESCRIPTION" } });
-  const heroTitleSizeSetting = await prisma.setting.findUnique({ where: { key: "HERO_TITLE_SIZE" } });
-  const heroTitleFontSetting = await prisma.setting.findUnique({ where: { key: "HERO_TITLE_FONT" } });
-  const heroQuoteSizeSetting = await prisma.setting.findUnique({ where: { key: "HERO_QUOTE_SIZE" } });
-  const heroQuoteFontSetting = await prisma.setting.findUnique({ where: { key: "HERO_QUOTE_FONT" } });
-  const heroDescSizeSetting = await prisma.setting.findUnique({ where: { key: "HERO_DESC_SIZE" } });
-  const heroDescFontSetting = await prisma.setting.findUnique({ where: { key: "HERO_DESC_FONT" } });
+  const heroTitle = getSetting("HERO_TITLE") || "BAHADIR KAYGISIZ";
+  const heroQuote = getSetting("HERO_QUOTE") || "Her gün daha iyiye";
+  const heroDescription = getSetting("HERO_DESCRIPTION") || "Kişisel gelişim, psikoloji, felsefe ve hareketli yaşam üzerine yazıyor ve youtube videosu paylaşıyorum.";
 
-  const heroTitle = heroTitleSetting?.value || "BAHADIR KAYGISIZ";
-  const heroQuote = heroQuoteSetting?.value || "Her gün daha iyiye";
-  const heroDescription = heroDescriptionSetting?.value || "Kişisel gelişim, psikoloji, felsefe ve hareketli yaşam üzerine yazıyor ve youtube videosu paylaşıyorum.";
-  const heroTitleClass = `${heroTitleSizeSetting?.value || "text-xl md:text-3xl"} ${heroTitleFontSetting?.value || "font-mono"} uppercase text-zinc-400 tracking-[0.5em]`;
-  const heroQuoteClass = `${heroQuoteSizeSetting?.value || "text-6xl md:text-[110px] lg:text-[140px]"} ${heroQuoteFontSetting?.value || "font-black"} tracking-tighter leading-[0.85] text-white uppercase`;
-  const heroDescClass = `${heroDescSizeSetting?.value || "text-lg md:text-xl lg:text-2xl"} ${heroDescFontSetting?.value || "font-medium"} text-zinc-500 leading-relaxed max-w-3xl`;
+  const heroTitleClass = `${getSetting("HERO_TITLE_SIZE") || "text-xl md:text-3xl"} ${getSetting("HERO_TITLE_FONT") || "font-mono"} uppercase text-zinc-400 tracking-[0.5em]`;
+  const heroQuoteClass = `${getSetting("HERO_QUOTE_SIZE") || "text-6xl md:text-[110px] lg:text-[140px]"} ${getSetting("HERO_QUOTE_FONT") || "font-black"} tracking-tighter leading-[0.85] text-white uppercase`;
+  const heroDescClass = `${getSetting("HERO_DESC_SIZE") || "text-lg md:text-xl lg:text-2xl"} ${getSetting("HERO_DESC_FONT") || "font-medium"} text-zinc-500 leading-relaxed max-w-3xl`;
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-amber-500/30 selection:text-amber-200">
@@ -154,14 +150,14 @@ export default async function Home() {
               <div className="text-center lg:text-left order-2 lg:order-1">
                 <h2 className="text-3xl font-bold font-serif mb-8 italic">Hakkımda</h2>
                 <div className="prose prose-invert max-w-none text-zinc-400 leading-loose">
-                  <p>{aboutContent?.value}</p>
+                  <p>{aboutContent}</p>
                 </div>
               </div>
-              {aboutImageUrl?.value && (
+              {aboutImageUrl && (
                 <div className="order-1 lg:order-2">
                   <div className="relative w-full aspect-square md:w-80 md:mx-auto lg:w-full max-w-md mx-auto">
                     <img
-                      src={aboutImageUrl.value}
+                      src={aboutImageUrl}
                       alt="About"
                       className="w-full h-full object-cover rounded-[40px] grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
                     />

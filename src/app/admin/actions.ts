@@ -31,6 +31,19 @@ export async function savePost(formData: FormData) {
     if (slug) revalidatePath(`/blog/${slug}`);
 }
 
+export async function createDraft() {
+    const post = await prisma.post.create({
+        data: {
+            title: "Adsız Taslak",
+            slug: `taslak-${Date.now()}`,
+            content: "",
+            published: false,
+        }
+    });
+    revalidatePath("/admin/posts");
+    return post.id;
+}
+
 export async function deletePost(id: string) {
     await prisma.post.delete({ where: { id } });
     revalidatePath("/");

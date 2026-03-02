@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
+    <html lang="tr" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${playfair.variable} antialiased bg-black text-zinc-100 font-sans`}
       >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import {
     DndContext,
@@ -19,8 +19,40 @@ import {
     useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Pencil, Trash2, Check, X } from "lucide-react";
+import {
+    GripVertical,
+    Pencil,
+    Trash2,
+    Check,
+    X,
+    Youtube,
+    Instagram,
+    Twitter,
+    Mail,
+    Link as LinkIcon,
+    Book,
+    Github,
+    Linkedin,
+    Facebook,
+    Video
+} from "lucide-react";
 import { saveLink, deleteLink, updateLinksOrder } from "../actions";
+
+const IconMapper = ({ name, className }: { name: string; className?: string }) => {
+    switch (name?.toLowerCase()) {
+        case "youtube": return <Youtube className={className} />;
+        case "instagram": return <Instagram className={className} />;
+        case "twitter":
+        case "x": return <Twitter className={className} />;
+        case "mail": return <Mail className={className} />;
+        case "book": return <Book className={className} />;
+        case "github": return <Github className={className} />;
+        case "linkedin": return <Linkedin className={className} />;
+        case "facebook": return <Facebook className={className} />;
+        case "twitch": return <Video className={className} />;
+        default: return <LinkIcon className={className} />;
+    }
+};
 
 type LinkData = {
     id: string;
@@ -31,7 +63,7 @@ type LinkData = {
 };
 
 // Empty form state
-const EMPTY_FORM = { title: "", url: "", icon: "", order: "" };
+const EMPTY_FORM = { title: "", url: "", icon: "link", order: "" };
 
 function SortableLinkItem({
     link,
@@ -73,15 +105,15 @@ function SortableLinkItem({
                 >
                     <GripVertical size={18} />
                 </button>
+                <div className="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center text-zinc-400 border border-zinc-800">
+                    <IconMapper name={link.icon || ""} className="w-4 h-4" />
+                </div>
                 <div className="min-w-0">
                     <p className="font-semibold text-zinc-200 truncate">{link.title}</p>
                     <p className="text-xs text-zinc-600 truncate max-w-[180px]">{link.url}</p>
                 </div>
             </div>
             <div className="flex items-center gap-1 shrink-0 ml-2">
-                <span className="px-2 py-1 bg-zinc-800/80 rounded text-[11px] text-zinc-500 mr-1">
-                    #{link.order}
-                </span>
                 <button
                     onClick={() => onEdit(link)}
                     title="Düzenle"
@@ -106,7 +138,6 @@ function SortableLinkItem({
 export default function AdminLinksClient({ initialLinks }: { initialLinks: LinkData[] }) {
     const [links, setLinks] = useState(initialLinks);
     const [editingId, setEditingId] = useState<string | null>(null);
-    // Controlled form state — always correct values
     const [form, setForm] = useState(EMPTY_FORM);
     const [saving, setSaving] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -125,7 +156,7 @@ export default function AdminLinksClient({ initialLinks }: { initialLinks: LinkD
         setForm({
             title: link.title,
             url: link.url,
-            icon: link.icon ?? "",
+            icon: link.icon ?? "link",
             order: String(link.order),
         });
     }
@@ -162,22 +193,7 @@ export default function AdminLinksClient({ initialLinks }: { initialLinks: LinkD
         await saveLink(fd);
         toast.success("Bağlantı başarıyla kaydedildi");
 
-        // Update local list immediately — no page reload needed
-        if (editingId) {
-            setLinks((prev) =>
-                prev.map((l) =>
-                    l.id === editingId
-                        ? { ...l, title: form.title, url: form.url, icon: form.icon, order: parseInt(form.order) }
-                        : l
-                )
-            );
-        } else {
-            // New link — we don't know the ID yet, so reload happens via revalidatePath
-            // We refresh the page state by navigating softly
-            window.location.reload();
-        }
-
-        cancelEdit();
+        window.location.reload();
         setSaving(false);
     }
 
@@ -188,116 +204,144 @@ export default function AdminLinksClient({ initialLinks }: { initialLinks: LinkD
         setLinks((prev) => prev.filter((l) => l.id !== id));
     }
 
+    const availableIcons = ["twitter", "instagram", "youtube", "mail", "book", "link", "github", "linkedin", "facebook", "twitch"];
+
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* ── Form ── */}
-            <div>
-                <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    {editingId ? (
-                        <>
-                            <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
-                            Linki Düzenle
-                        </>
-                    ) : (
-                        "Yeni Link Ekle"
-                    )}
-                </h2>
-                <form onSubmit={handleSubmit} className="space-y-4 bg-[#0e0e0e] p-6 rounded-2xl border border-zinc-800">
-                    <div>
-                        <label className="block text-xs text-zinc-500 mb-1.5 uppercase tracking-widest">Başlık</label>
-                        <input
-                            required
-                            value={form.title}
-                            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                            className="w-full bg-black border border-zinc-800 rounded-lg p-3 text-zinc-100 focus:outline-none focus:border-amber-500 transition-colors"
-                            placeholder="Örn: X (Twitter)"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs text-zinc-500 mb-1.5 uppercase tracking-widest">URL</label>
-                        <input
-                            required
-                            value={form.url}
-                            onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
-                            className="w-full bg-black border border-zinc-800 rounded-lg p-3 text-zinc-100 focus:outline-none focus:border-amber-500 transition-colors"
-                            placeholder="https://x.com/... veya mailto:..."
-                        />
-                    </div>
-                    <div className="flex gap-3">
-                        <div className="flex-1">
-                            <label className="block text-xs text-zinc-500 mb-1.5 uppercase tracking-widest">İkon</label>
-                            <input
-                                value={form.icon}
-                                onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))}
-                                className="w-full bg-black border border-zinc-800 rounded-lg p-3 text-zinc-100 focus:outline-none focus:border-amber-500 transition-colors"
-                                placeholder="twitter, instagram, youtube…"
-                            />
-                        </div>
-                        <div className="w-24">
-                            <label className="block text-xs text-zinc-500 mb-1.5 uppercase tracking-widest">Sıra</label>
-                            <input
-                                type="number"
-                                value={form.order}
-                                onChange={(e) => setForm((f) => ({ ...f, order: e.target.value }))}
-                                className="w-full bg-black border border-zinc-800 rounded-lg p-3 text-zinc-100 focus:outline-none focus:border-amber-500 transition-colors"
-                                placeholder={String(links.length)}
-                            />
-                        </div>
-                    </div>
-                    <div className="flex gap-2 pt-1">
-                        <button
-                            type="submit"
-                            disabled={saving}
-                            className="flex-1 flex items-center justify-center gap-2 bg-zinc-100 text-black font-bold rounded-lg py-3 hover:bg-white active:bg-zinc-200 transition-colors disabled:opacity-50"
-                        >
-                            <Check size={16} />
-                            {saving ? "Kaydediliyor…" : editingId ? "Güncelle" : "Ekle"}
-                        </button>
-                        {editingId && (
-                            <button
-                                type="button"
-                                onClick={cancelEdit}
-                                className="flex items-center gap-2 px-5 bg-zinc-900 border border-zinc-700 text-zinc-400 font-semibold rounded-lg hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
-                            >
-                                <X size={15} />
-                                İptal
-                            </button>
-                        )}
-                    </div>
-                </form>
+        <div className="max-w-5xl mx-auto">
+            <div className="mb-12">
+                <h1 className="text-4xl font-bold font-serif text-white tracking-tight">Hızlı Linkler</h1>
+                <p className="text-zinc-500 text-sm mt-2 font-medium">Sitedeki tüm bağlantıları ve sosyal medya ikonlarını yönet.</p>
             </div>
 
-            {/* ── List ── */}
-            <div>
-                <h2 className="text-lg font-bold mb-4">
-                    Mevcut Linkler{" "}
-                    <span className="text-zinc-600 font-normal text-sm ml-1">— sürükle &amp; bırak</span>
-                </h2>
-                {mounted ? (
-                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                        <SortableContext items={links.map((l) => l.id)} strategy={verticalListSortingStrategy}>
-                            <div className="space-y-2">
-                                {links.map((link) => (
-                                    <SortableLinkItem
-                                        key={link.id}
-                                        link={link}
-                                        isEditing={link.id === editingId}
-                                        onEdit={startEdit}
-                                        onDelete={handleDelete}
-                                    />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                {/* ── Form ── */}
+                <div>
+                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                        {editingId ? (
+                            <>
+                                <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
+                                Linki Düzenle
+                            </>
+                        ) : (
+                            "Yeni Link Ekle"
+                        )}
+                    </h2>
+                    <form onSubmit={handleSubmit} className="space-y-4 bg-[#0e0e0e] p-6 rounded-2xl border border-zinc-800">
+                        <div>
+                            <label className="block text-xs text-zinc-500 mb-1.5 uppercase tracking-widest">Başlık</label>
+                            <input
+                                required
+                                value={form.title}
+                                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                                className="w-full bg-black border border-zinc-800 rounded-lg p-3 text-zinc-100 focus:outline-none focus:border-amber-500 transition-colors"
+                                placeholder="Örn: X (Twitter)"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs text-zinc-500 mb-1.5 uppercase tracking-widest">URL</label>
+                            <input
+                                required
+                                value={form.url}
+                                onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
+                                className="w-full bg-black border border-zinc-800 rounded-lg p-3 text-zinc-100 focus:outline-none focus:border-amber-500 transition-colors"
+                                placeholder="https://x.com/... veya mailto:..."
+                            />
+                        </div>
+
+                        <div className="space-y-3">
+                            <label className="block text-xs text-zinc-500 uppercase tracking-widest">İkon Seçin</label>
+                            <div className="grid grid-cols-5 gap-2 p-3 bg-black border border-zinc-800 rounded-xl">
+                                {availableIcons.map((iconName) => (
+                                    <button
+                                        key={iconName}
+                                        type="button"
+                                        onClick={() => setForm(f => ({ ...f, icon: iconName }))}
+                                        className={`flex items-center justify-center p-2.5 rounded-lg border transition-all ${form.icon === iconName
+                                            ? "bg-amber-500/20 border-amber-500 text-amber-500"
+                                            : "bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                                            }`}
+                                        title={iconName}
+                                    >
+                                        <IconMapper name={iconName} className="w-5 h-5" />
+                                    </button>
                                 ))}
                             </div>
-                        </SortableContext>
-                    </DndContext>
-                ) : (
-                    <div className="space-y-2">
-                        {links.map((link) => (
-                            <div key={link.id} className="p-4 rounded-xl border border-zinc-800 bg-[#0e0e0e] opacity-50">
-                                {link.title}
+                            <div className="flex gap-3">
+                                <div className="flex-1">
+                                    <label className="block text-[10px] text-zinc-600 mb-1 uppercase">Manuel İkon</label>
+                                    <input
+                                        value={form.icon}
+                                        onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))}
+                                        className="w-full bg-black border border-zinc-800 rounded-lg p-2.5 text-zinc-100 text-xs focus:outline-none focus:border-amber-500 transition-colors"
+                                        placeholder="ikon-adi"
+                                    />
+                                </div>
+                                <div className="w-24">
+                                    <label className="block text-[10px] text-zinc-600 mb-1 uppercase">Sıra</label>
+                                    <input
+                                        type="number"
+                                        value={form.order}
+                                        onChange={(e) => setForm((f) => ({ ...f, order: e.target.value }))}
+                                        className="w-full bg-black border border-zinc-800 rounded-lg p-2.5 text-zinc-100 text-xs focus:outline-none focus:border-amber-500 transition-colors"
+                                        placeholder={String(links.length)}
+                                    />
+                                </div>
                             </div>
-                        ))}
-                    </div>
-                )}
+                        </div>
+
+                        <div className="flex gap-2 pt-1">
+                            <button
+                                type="submit"
+                                disabled={saving}
+                                className="flex-1 flex items-center justify-center gap-2 bg-zinc-100 text-black font-bold rounded-lg py-3 hover:bg-white active:bg-zinc-200 transition-colors disabled:opacity-50"
+                            >
+                                <Check size={16} />
+                                {saving ? "Kaydediliyor…" : editingId ? "Güncelle" : "Ekle"}
+                            </button>
+                            {editingId && (
+                                <button
+                                    type="button"
+                                    onClick={cancelEdit}
+                                    className="flex items-center gap-2 px-5 bg-zinc-900 border border-zinc-700 text-zinc-400 font-semibold rounded-lg hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                >
+                                    <X size={15} />
+                                    İptal
+                                </button>
+                            )}
+                        </div>
+                    </form>
+                </div>
+
+                {/* ── List ── */}
+                <div>
+                    <h2 className="text-lg font-bold mb-4">
+                        Mevcut Linkler
+                        <span className="text-zinc-600 font-normal text-sm ml-2">— sırala &amp; yönet</span>
+                    </h2>
+                    {mounted ? (
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                            <SortableContext items={links.map((l) => l.id)} strategy={verticalListSortingStrategy}>
+                                <div className="space-y-2">
+                                    {links.map((link) => (
+                                        <SortableLinkItem
+                                            key={link.id}
+                                            link={link}
+                                            isEditing={link.id === editingId}
+                                            onEdit={startEdit}
+                                            onDelete={handleDelete}
+                                        />
+                                    ))}
+                                </div>
+                            </SortableContext>
+                        </DndContext>
+                    ) : (
+                        <div className="space-y-2 animate-pulse">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 h-16" />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

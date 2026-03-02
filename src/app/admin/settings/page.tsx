@@ -1,4 +1,5 @@
 import { prisma } from "../../../lib/prisma";
+export const dynamic = "force-dynamic";
 import AdminSettingsClient from "./AdminSettingsClient";
 
 export default async function SettingsAdminPage() {
@@ -29,16 +30,5 @@ export default async function SettingsAdminPage() {
         heroDescFont: heroDescFontSetting?.value || "font-medium"
     };
 
-    return (
-        <div>
-            <header className="mb-10">
-                <h1 className="text-3xl font-bold font-serif italic">Genel Ayarlar</h1>
-                <p className="text-zinc-500 text-sm mt-1">Sitenizin ana içeriklerini ve görünümünü buradan yönetin.</p>
-            </header>
-
-            <div className="max-w-4xl">
-                <AdminSettingsClient settings={settings} />
-            </div>
-        </div>
-    );
+    return <AdminSettingsClient settings={settings} />;
 }

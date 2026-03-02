@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { LayoutDashboard, PenTool, Link as LinkIcon, Settings, Home } from "lucide-react";
+import AdminSidebar from "./components/AdminSidebar";
 import { Toaster } from "react-hot-toast";
 
 export const metadata = {
-    title: "Yönetici Paneli - Bahadır Kaygısız",
+    title: "Yönetici Paneli | Bahadır Kaygısız",
     robots: { index: false, follow: false },
 };
 
@@ -13,7 +12,7 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen bg-black text-zinc-300 flex flex-col md:flex-row">
+        <div className="min-h-screen bg-black text-zinc-300 flex flex-col md:flex-row overflow-x-hidden">
             <Toaster
                 position="top-right"
                 toastOptions={{
@@ -21,50 +20,26 @@ export default function AdminLayout({
                         background: '#0a0a0a',
                         color: '#fff',
                         border: '1px solid #27272a',
+                        borderRadius: '16px',
+                        padding: '16px',
+                        fontWeight: '600'
                     },
                     success: {
                         iconTheme: {
-                            primary: '#22c55e',
-                            secondary: '#fff',
+                            primary: '#f59e0b',
+                            secondary: '#000',
                         },
                     },
                 }}
             />
-            {/* Sidebar for Navigation */}
-            <aside className="w-full md:w-64 border-r border-zinc-800 bg-[#0a0a0a] p-6 flex flex-col justify-between">
-                <div>
-                    <div className="mb-10 font-serif font-bold text-2xl text-zinc-100 flex items-center gap-2">
-                        Admin Panel
-                    </div>
-                    <nav className="flex flex-col gap-2">
-                        <Link href="/admin" className="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-800/60 transition text-zinc-400 hover:text-zinc-100">
-                            <LayoutDashboard size={18} />
-                            Gösterge Paneli
-                        </Link>
-                        <Link href="/admin/posts" className="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-800/60 transition text-zinc-400 hover:text-zinc-100">
-                            <PenTool size={18} />
-                            Makaleler
-                        </Link>
-                        <Link href="/admin/links" className="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-800/60 transition text-zinc-400 hover:text-zinc-100">
-                            <LinkIcon size={18} />
-                            Linkler
-                        </Link>
-                        <Link href="/admin/settings" className="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-800/60 transition text-zinc-400 hover:text-zinc-100">
-                            <Settings size={18} />
-                            Ayarlar
-                        </Link>
-                    </nav>
-                </div>
 
-                <Link href="/" className="flex items-center justify-center gap-2 p-4 mt-8 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 transition-colors">
-                    <Home size={16} />
-                    Siteye Dön
-                </Link>
-            </aside>
+            <AdminSidebar />
 
-            {/* Main Content Area */}
-            <main className="flex-1 p-6 md:p-10 lg:p-16 max-h-screen overflow-y-auto bg-black">
-                <div className="max-w-5xl mx-auto">
+            <main className="flex-1 min-h-screen relative p-4 md:p-12 lg:p-20 overflow-y-auto">
+                {/* Subtle background glow */}
+                <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-amber-500/5 blur-[150px] pointer-events-none -z-10" />
+
+                <div className="max-w-[1200px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000">
                     {children}
                 </div>
             </main>
